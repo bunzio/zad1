@@ -67,8 +67,7 @@ void main(void) {
 
     if(Sekwencja == 3){                   // trzecia sekwencja
 
-        P1OUT &= LedRed;
-        P1OUT &= LedGreen;                      // w³¹cza obie diody
+        P1OUT &= LedRed;                // zapalenie diody czerwonej
         }
 
     if(Sekwencja == 4){                   // czwarta sekwencja
@@ -77,6 +76,7 @@ void main(void) {
         __delay_cycles(500000);                 //czekaj 500ms
         P1OUT &= LedRed;
         P1OUT &= LedGreen;                      // wy³¹cza obie diody
+        __delay_cycles(500000);                 //czekaj 500ms
 
 
         }
