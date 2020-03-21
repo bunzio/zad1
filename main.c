@@ -9,7 +9,7 @@
 
 void main(void) {
     WDTCTL = WDTPW | WDTHOLD;
-
+    volatile unsigned int i;        // volatile to prevent optimization
     /* --------- Hardware -----------------------------------
      Ustawienie wejsc wyjsc rezystorów itd
      --------------------------------------------------------------*/
@@ -20,12 +20,12 @@ void main(void) {
     P1DIR &= ~Przycisk;                       // ustawienie przycisku jako wejscie
     P1REN |= Przycisk;                        // wÅ‚Ä…czenie rezystora
     P1OUT |= Przycisk;                        // ustawienie rezystora jako pull up
-
+    P1OUT &= LedRed;                        //w³acza diode czerwon¹
     /* --------- zmiennej -----------------------------------
      inicjalizacja zmiennych pomocniczych
      --------------------------------------------------------------*/
     int przyciskPressed = 0;
-    int ktoraSekwencja = 0;
+    int Sekwencja = 0;
 
     /* --------- ktÃ³ra sekwencja -----------------------------------------
      Czesc programu odpowiadajÄ…ca za zlicznie iloÅ›ci wciÅ›nieÄ‡ przycisku
@@ -42,7 +42,7 @@ void main(void) {
 
     if(przyciskPressed == 1){                   //jesli zostaÅ‚o wykryte zbocze
                                                 //narastajÄ…ce(if...else powyÅ¼ej) dodaje jeden do zmiennej
-        ktoraSekwencja++;
+        Sekwencja++;
 
     }
 
@@ -50,29 +50,39 @@ void main(void) {
      W zaleÅ¼noÅ›ci od ktoraSekwencja  taka sekwencja mrugania jest wykonywana
      dla 0 led wyÅ‚Ä…czone
      ---------------------------------------------------------------------------------*/
-     if(ktoraSekwencja == 0){                   // zerowa sekwencja
+     if(Sekwencja == 0){                   // zerowa sekwencja
        P1OUT &= ~LedRed;                        // wyÅ‚Ä…cz led czerwony
        P1OUT &= ~LedGreen;                     // wyÅ‚Ä…cz led zielony
      }
 
-    if(ktoraSekwencja == 1){                    // pierwsza sekwencja
+    if(Sekwencja == 1){                    // pierwsza sekwencja
 
+        P1OUT &= LedRed;                        // w³¹cza czerwona diode
     }
 
-    if(ktoraSekwencja == 2){                    // druga sekwencja
+    if(Sekwencja == 2){                    // druga sekwencja
+        P1OUT &= ~LedRed;                        // wyÅ‚Ä…cz led czerwony
+        P1OUT &= LedGreen;                      // w³¹cza diode zielona
+        }
+
+    if(Sekwencja == 3){                   // trzecia sekwencja
+
+        P1OUT &= LedRed;
+        P1OUT &= LedGreen;                      // w³¹cza obie diody
+        }
+
+    if(Sekwencja == 4){                   // czwarta sekwencja
+        P1OUT &= ~LedRed;
+        P1OUT &= ~LedGreen;                      // wy³¹cza obie diody
+        __delay_cycles(500000);                 //czekaj 500ms
+        P1OUT &= LedRed;
+        P1OUT &= LedGreen;                      // wy³¹cza obie diody
+
 
         }
 
-    if(ktoraSekwencja == 3){                   // trzecia sekwencja
-
-        }
-
-    if(ktoraSekwencja == 4){                   // czwarta sekwencja
-
-        }
-
-    if(ktoraSekwencja == 5){                  // pi¹te wciœniêcie przycisku zeruje sekwencje
-        ktoraSekwencja = 0;
+    if(Sekwencja == 5){                  // pi¹te wciœniêcie przycisku zeruje sekwencje
+        Sekwencja = 0;
 
         }
 
